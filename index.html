@@ -345,7 +345,7 @@
         }
     </style>
 </head>
-<body> <!-- here ye here ye this be my audio player mark, dont touch it -->
+<body> <!-- here ye here ye this be the website gui shit mark, dont touch it -->
     <header>
         <div class="eta-audio-player">
             <button id="eta-audio-play" title="Play/Pause" class="eta-audio-btn">
@@ -379,6 +379,7 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#games">Games</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="discord.html" style="color:var(--accent);">Discord</a></li>
                 </ul>
             </nav>
         </div>
@@ -435,7 +436,7 @@
     </footer>
     <audio id="eta-audio" src="dystopia.mp3" loop style="display:none;"></audio>
     <script>
-    // Custom Audio Player logic
+    // audioo playger scrump
     const audio = document.getElementById('eta-audio');
     const playBtn = document.getElementById('eta-audio-play');
     const playIcon = document.getElementById('eta-audio-play-icon');
@@ -485,14 +486,14 @@
         setPlayPauseIcon(false);
         playing = false;
     };
-    // Volume dropdown logic
+    // voloom control
     volumeBtn.onclick = function(e) {
         e.stopPropagation();
         volumeDropdown.style.display = volumeDropdown.style.display === 'none' ? '' : 'none';
     };
     volumeSlider.oninput = function() {
         audio.volume = parseFloat(this.value);
-        // Change icon if muted or low
+        // icon go brrr
         if (audio.volume === 0) {
             volumeIcon.innerHTML = '<rect x="6" y="10" width="12" height="4" fill="currentColor"/>';
         } else {
@@ -503,7 +504,7 @@
         volumeDropdown.style.display = 'none';
     });
     volumeDropdown.onclick = function(e) { e.stopPropagation(); };
-    // Remove stop button visually
+    // what stop buttton
     document.getElementById('eta-audio-stop').style.display = 'none';
     barContainer.onclick = function(e) {
         const rect = barContainer.getBoundingClientRect();
@@ -511,13 +512,13 @@
         const percent = x / rect.width;
         audio.currentTime = percent * (audio.duration||0);
     };
-    // Try to autoplay, show play button if blocked
+    // autoplay no worky
     function tryPlay() {
         audio.play().catch(() => {
             setPlayPauseIcon(false);
         });
     }
-    // Try to play on first user interaction
+    // PLEASE WORK FUCKER
     document.body.addEventListener('click', function once() {
         if (!playing && !stopped) tryPlay();
         document.body.removeEventListener('click', once);

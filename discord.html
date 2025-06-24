@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETA Game Studio - Discord</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --deep-purple: #6c2eb7;
+            --black: #18181b;
+            --grey: #2d2d31;
+            --light-grey: #44444a;
+            --accent: #a259f7;
+            --white: #f3f3f3;
+        }
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--black) 60%, var(--deep-purple) 100%);
+            color: var(--white);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background: var(--grey);
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            color: var(--accent);
+            letter-spacing: 0.2em;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
+        nav a:hover {
+            color: var(--accent);
+        }
+        .discord-hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            padding: 4rem 2rem 2rem 2rem;
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        .discord-island {
+            position: relative;
+            z-index: 2;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            background: rgba(34, 20, 40, 0.55);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            max-width: 420px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .discord-island h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+            text-shadow: 0 0 16px var(--deep-purple);
+        }
+        .discord-link {
+            display: inline-block;
+            margin-top: 2rem;
+            background: var(--accent);
+            color: var(--black);
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 4px 16px rgba(108,46,183,0.3);
+        }
+        .discord-link:hover {
+            background: var(--white);
+            color: var(--deep-purple);
+        }
+        @media (max-width: 600px) {
+            .discord-island {
+                padding: 1.5rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div style="display: flex; align-items: center; gap: 1.2rem;">
+                <div class="logo">ETA</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html#home">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#games">Games</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="discord.html" style="color:var(--accent);">Discord</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="discord-hero">
+        <div class="discord-island">
+            <h1>Interested? come join us!</h1>
+            <a class="discord-link" href="https://discord.gg/XeyjaAMm67" target="_blank">Discord Invite</a>
+        </div>
+    </section>
+    <footer>
+        &copy; 2025 ETA Game Studio. All rights reserved.
+    </footer>
+</body>
+</html>
