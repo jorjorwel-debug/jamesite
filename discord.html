@@ -111,10 +111,102 @@
                 padding: 1.5rem 0.5rem;
             }
         }
+        .eta-audio-player {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            margin: 1rem 0;
+            position: relative;
+            z-index: 10;
+        }
+        .eta-audio-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            outline: none;
+            padding: 0;
+            margin: 0 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .eta-audio-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--light-grey);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            margin: 0 0.5rem;
+        }
+        .eta-audio-progress {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            width: 0;
+        }
+        .eta-audio-time {
+            font-size: 0.9rem;
+            color: var(--white);
+            min-width: 40px;
+            text-align: center;
+        }
+        .eta-audio-volume {
+            position: relative;
+        }
+        .eta-audio-volume-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--grey);
+            border-radius: 8px;
+            padding: 0.5rem;
+            display: none;
+            z-index: 20;
+        }
+        .eta-audio-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-left: 0.5rem;
+        }
+        .eta-audio-logo img {
+            width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
     <header>
+        <div class="eta-audio-player">
+            <button id="eta-audio-play" title="Play/Pause" class="eta-audio-btn">
+                <svg id="eta-audio-play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6,4 20,12 6,20 6,4" fill="currentColor"/></svg>
+                <svg id="eta-audio-pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg>
+            </button>
+            <div class="eta-audio-bar">
+                <div id="eta-audio-progress" class="eta-audio-progress"></div>
+            </div>
+            <span id="eta-audio-time" class="eta-audio-time">0:00 / 0:00</span>
+            <div class="eta-audio-volume">
+                <button id="eta-audio-volume-btn" class="eta-audio-btn" title="Volume">
+                    <svg id="eta-audio-volume-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="3,9 9,9 13,5 13,19 9,15 3,15" fill="currentColor"/>
+                        <path d="M16 8.82a4 4 0 0 1 0 6.36" stroke="currentColor"/>
+                    </svg>
+                </button>
+                <div id="eta-audio-volume-dropdown" class="eta-audio-volume-dropdown" style="display:none;">
+                    <input id="eta-audio-volume-slider" type="range" min="0" max="1" step="0.01" value="0.3">
+                </div>
+            </div>
+            <img src="assets/icon.png" alt="ETA Logo" class="eta-audio-logo" onerror="this.onerror=null;this.src='https://via.placeholder.com/36x36?text=ETA';">
+        </div>
         <div class="navbar">
             <div style="display: flex; align-items: center; gap: 1.2rem;">
                 <div class="logo">ETA</div>
@@ -135,7 +227,96 @@
             <h1>Interested? come join us!</h1>
             <a class="discord-link" href="https://discord.gg/XeyjaAMm67" target="_blank">Discord Invite</a>
         </div>
+        <div class="discord-island" style="margin-top:2.5rem;">
+            <h1>Projects</h1>
+            <a href="assets/youtube-downloader.rar" download class="discord-link" style="margin-top:2rem;">YouTube Downloader</a>
+        </div>
     </section>
+    <audio id="eta-audio" src="assets/dystopia.mp3" loop style="display:none;"></audio>
+    <script>
+    // nigga player logic (copied from index.html, with autoplay)
+    const audio = document.getElementById('eta-audio');
+    const playBtn = document.getElementById('eta-audio-play');
+    const playIcon = document.getElementById('eta-audio-play-icon');
+    const pauseIcon = document.getElementById('eta-audio-pause-icon');
+    const volumeBtn = document.getElementById('eta-audio-volume-btn');
+    const volumeIcon = document.getElementById('eta-audio-volume-icon');
+    const volumeDropdown = document.getElementById('eta-audio-volume-dropdown');
+    const volumeSlider = document.getElementById('eta-audio-volume-slider');
+    const progressBar = document.getElementById('eta-audio-progress');
+    const barContainer = document.querySelector('.eta-audio-bar');
+    const timeLabel = document.getElementById('eta-audio-time');
+    audio.volume = 0.3;
+    let stopped = false;
+    let playing = false;
+    function formatTime(t) {
+        const m = Math.floor(t/60);
+        const s = Math.floor(t%60).toString().padStart(2,'0');
+        return `${m}:${s}`;
+    }
+    function updateTime() {
+        timeLabel.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration||0)}`;
+        progressBar.style.width = ((audio.currentTime/(audio.duration||1))*100)+"%";
+    }
+    function setPlayPauseIcon(isPlaying) {
+        playIcon.style.display = isPlaying ? 'none' : '';
+        pauseIcon.style.display = isPlaying ? '' : 'none';
+    }
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('loadedmetadata', updateTime);
+    playBtn.onclick = function() {
+        if (audio.paused || audio.ended) {
+            audio.play();
+            setPlayPauseIcon(true);
+            playing = true;
+        } else {
+            audio.pause();
+            setPlayPauseIcon(false);
+            playing = false;
+        }
+    };
+    audio.onplay = function() {
+        setPlayPauseIcon(true);
+        playing = true;
+        stopped = false;
+    };
+    audio.onpause = function() {
+        setPlayPauseIcon(false);
+        playing = false;
+    };
+    // volume control
+    volumeBtn.onclick = function(e) {
+        e.stopPropagation();
+        volumeDropdown.style.display = volumeDropdown.style.display === 'none' ? '' : 'none';
+    };
+    volumeSlider.oninput = function() {
+        audio.volume = parseFloat(this.value);
+        if (audio.volume === 0) {
+            volumeIcon.innerHTML = '<rect x="6" y="10" width="12" height="4" fill="currentColor"/>';
+        } else {
+            volumeIcon.innerHTML = '<polygon points="3,9 9,9 13,5 13,19 9,15 3,15" fill="currentColor"/><path d="M16 8.82a4 4 0 0 1 0 6.36" stroke="currentColor"/>';
+        }
+    };
+    document.body.addEventListener('click', function() {
+        volumeDropdown.style.display = 'none';
+    });
+    volumeDropdown.onclick = function(e) { e.stopPropagation(); };
+    barContainer.onclick = function(e) {
+        const rect = barContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percent = x / rect.width;
+        audio.currentTime = percent * (audio.duration||0);
+    };
+    // autoplay logeec
+    window.addEventListener('DOMContentLoaded', function() {
+        audio.play().catch(() => {
+            setPlayPauseIcon(false);
+        });
+    });
+    // Init
+    updateTime();
+    setPlayPauseIcon(false);
+    </script>
     <footer>
         &copy; 2025 ETA Game Studio. All rights reserved.
     </footer>

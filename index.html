@@ -367,11 +367,11 @@
                     <input id="eta-audio-volume-slider" type="range" min="0" max="1" step="0.01" value="0.3">
                 </div>
             </div>
-            <img src="icon.png" alt="ETA Logo" class="eta-audio-logo" onerror="this.onerror=null;this.src='https://via.placeholder.com/36x36?text=ETA';">
+            <img src="assets/icon.png" alt="ETA Logo" class="eta-audio-logo" onerror="this.onerror=null;this.src='https://via.placeholder.com/36x36?text=ETA';">
         </div>
         <div class="navbar">
             <div style="display: flex; align-items: center; gap: 1.2rem;">
-                <div class="logo">ETA</div>
+                <div class="logo">.</div>
             </div>
             <nav>
                 <ul>
@@ -395,7 +395,7 @@
         <section id="about">
             <h2>About ETA</h2>
             <div class="about">
-                <img src="icon.png" alt="ETA Studio Logo or Team" onerror="this.onerror=null;this.src='https://via.placeholder.com/180x180?text=ETA';">
+                <img src="assets/icon.png" alt="ETA Studio Logo or Team" onerror="this.onerror=null;this.src='https://via.placeholder.com/180x180?text=ETA';">
                 <div class="about-text">
                     <p>insert corperate bullshit here</p>
                 </div>
@@ -405,17 +405,17 @@
             <h2>Our Games</h2>
             <div class="games-grid">
                 <div class="game-card">
-                    <img src="icon.png" alt="Game 1" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=ETA';">
+                    <img src="assets/icon.png" alt="Game 1" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=ETA';">
                     <h3>Project sigma</h3>
                     <p>fulgur smells.</p>
                 </div>
                 <div class="game-card">
-                    <img src="icon.png" alt="Game 2" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=ETA';">
+                    <img src="assets/icon.png" alt="Game 2" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=ETA';">
                     <h3>Gravity Circuit</h3>
                     <p>aaaaaaaaaaa mmmmmm aamamam, yo you know like crack? yeah. - Fulgur Halcyon.</p>
                 </div>
                 <div class="game-card">
-                    <img src="icon.png" alt="Game 3" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=ETA';">
+                    <img src="assets/icon.png" alt="Game 3" onerror="this.onerror=null;this.src='https://via.placeholder.com/100x100?text=ETA';">
                     <h3>game fr</h3>
                     <p>smegma</p>
                 </div>
@@ -423,18 +423,19 @@
         </section>
         <section id="contact">
             <h2>Contact Us</h2>
-            <form class="contact-form">
+            <form class="contact-form" id="contactForm">
                 <input type="text" name="name" placeholder="Your Name" required>
                 <input type="email" name="email" placeholder="Your Email" required>
                 <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
                 <button type="submit">Send Message</button>
+                <div id="contact-status" style="margin-top:1rem;font-size:1rem;"></div>
             </form>
         </section>
     </main>
     <footer>
         &copy; 2025 ETA Game Studio. All rights reserved.
     </footer>
-    <audio id="eta-audio" src="dystopia.mp3" loop style="display:none;"></audio>
+    <audio id="eta-audio" src="assets/dystopia.mp3" loop style="display:none;"></audio>
     <script>
     // audioo playger scrump
     const audio = document.getElementById('eta-audio');
@@ -505,7 +506,6 @@
     });
     volumeDropdown.onclick = function(e) { e.stopPropagation(); };
     // what stop buttton
-    document.getElementById('eta-audio-stop').style.display = 'none';
     barContainer.onclick = function(e) {
         const rect = barContainer.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -523,6 +523,33 @@
         if (!playing && !stopped) tryPlay();
         document.body.removeEventListener('click', once);
     });
+    // Contact form email sending
+    const contactForm = document.getElementById('contactForm');
+    const contactStatus = document.getElementById('contact-status');
+    const BACKEND_URL = 'http://71.95.129.101:3001/send-email';
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            contactStatus.textContent = 'Sending...';
+            const formData = new FormData(contactForm);
+            const data = Object.fromEntries(formData.entries());
+            try {
+                const res = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    contactStatus.textContent = 'Message sent!';
+                    contactForm.reset();
+                } else {
+                    contactStatus.textContent = 'Failed to send. Try again later.';
+                }
+            } catch (err) {
+                contactStatus.textContent = 'Error sending message.';
+            }
+        });
+    }
     // Init
     updateTime();
     setPlayPauseIcon(false);
